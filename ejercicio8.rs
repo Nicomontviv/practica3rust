@@ -1,6 +1,5 @@
 #[derive(Debug)]
-#[derive(PartialEq)]
-use std::convert::TryInto;
+
 enum Genero{
     ROCK,
     POP,
@@ -9,20 +8,52 @@ enum Genero{
     OTRO,
 }
 
-impl Eq for Genero {}
+
 
 impl Genero {
-    fn Eq(&self, other:Genero) -> bool {
-        self == other
+    fn Eq(&self, otro:&Genero) -> bool {
+        match self{
+            Genero::ROCK => match otro{
+                Genero::ROCK => return true,
+                _ => return false,
+            }
+            Genero::POP => match otro{
+                Genero::POP => return true,
+                _ => return false,
+            }
+            Genero::JAZZ => match otro{
+                Genero::JAZZ => return true,
+                _ => return false,
+            }
+            Genero::RAP => match otro{
+                Genero::RAP => return true,
+                _ => return false,
+            }
+            Genero::OTRO => match otro{
+                Genero::OTRO => return true,
+                _ => return false,
+            }
+        }
+    }
+    fn clonar(&self) -> Genero{
+       let otro;
+        match self{
+            Genero::ROCK => otro = Genero::ROCK,
+            Genero::POP => otro = Genero::POP,
+            Genero::JAZZ => otro = Genero::JAZZ,
+            Genero::RAP => otro = Genero::RAP,
+            Genero::OTRO => otro = Genero::OTRO,
+        }
+        return otro
     }
 }
-#[derive(PartialEq)]
+
 struct Cancion{
     titulo:String,
     artista:String,
     genero:Genero,
 }
-impl Eq for Cancion {}
+
 impl Cancion{
     fn new(titulo:String, artista:String, genero:Genero) -> Cancion{
         Cancion{
@@ -33,18 +64,17 @@ impl Cancion{
     }
         fn clonar(&self) -> Cancion{
             Cancion{
-                titulo:self.titulo,
-                artista:self.artista,
-                genero: self.genero,
+                titulo:String::from(&self.titulo),
+                artista:String::from(&self.artista),
+                genero: self.genero.clonar(),
             }
         }
         fn Eq(&self, otro:&Cancion) -> bool{
-            if self == otro {
-                return true
+            let mut equivale:bool = false;
+            if self.titulo == otro.titulo && self.artista == otro.artista && self.genero.Eq(&otro.genero){
+                  equivale = true;
             }
-            else{
-                return false
-            }
+            return equivale
         }
     }
 
@@ -76,11 +106,11 @@ impl Playlist{
     }
     fn mover_cancion(&mut self, cancion:Cancion, pos:i32) ->bool{
         let mut encontrado:bool = false;
-        if pos > self.canciones.len(){
+        if pos as usize > self.canciones.len(){
             return encontrado 
         }else {
         let mut i:i32 = -1;
-        while i < self.canciones.len().try_into().unwrap() && encontrado != true {
+        while (i as usize) < self.canciones.len() && encontrado != true {
               i = i + 1;
               if self.canciones[i as usize].titulo == cancion.titulo && self.canciones[i as usize].artista == cancion.artista{
                 encontrado = true;
@@ -94,13 +124,13 @@ impl Playlist{
        }
     }
     
-    fn buscar_por_nombre(&self, unNombre:String) -> Option<&Cancion>{
+    fn buscar_por_nombre(&self, unNombre:String) -> Option<Cancion>{
         let mut i:usize = 0;
         while i< self.canciones.len() && self.canciones[i].titulo!= unNombre{
             i = i + 1;
         } 
         if self.canciones[i].titulo == unNombre{
-            return Some(&self.canciones[i]) }else{
+            return Some(self.canciones[i].clonar()) }else{
             return None
             
         }
@@ -114,11 +144,11 @@ impl Playlist{
             }
             return canciones_genero
     }
-    fn obtener_por_artista(&self, unArtista:String) -> Vec<&Cancion>{
+    fn obtener_por_artista(&self, unArtista:String) -> Vec<Cancion>{
         let mut canciones_artista = Vec::new();
         for i in 0..self.canciones.len(){
             if self.canciones[i].artista == unArtista {
-                      canciones_artista.push(&self.canciones[i]);
+                      canciones_artista.push(self.canciones[i].clonar());
             }
         }
         return canciones_artista
@@ -134,7 +164,14 @@ impl Playlist{
 }
 
 fn main(){
-    let nueva_playlist1 = Playlist::new("mis_canciones".to_string());
+    let mut nueva_playlist1 = Playlist::new("mis_canciones".to_string());
+    let cancionNueva = Cancion::new("Al amanecer".to_string(), "Los Piojos".to_string(), Genero::ROCK);
+    nueva_playlist1.agregar_cancion(cancionNueva);
+    let aux = nueva_playlist1.canciones.pop();
+    match aux{
+        Some(a) => println!("Se encontro la cancion {} de {} en la playlist {}", a.titulo, a.artista, nueva_playlist1.titulo),
+        None => println!("No se encontro nada"),
+    }
 }
 
 

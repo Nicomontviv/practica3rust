@@ -41,20 +41,20 @@ impl Fecha{
                              if self.mes % 2 == 0{  //si es par
                                 if self.dia > 0 && self.dia <= 30{
                                     valido = true;
-                                 } else{  //si es impar
-                                    if self.dia > 0 && self.dia <= 31 {
-                                        valido = true;
-                                     }
+                                 } 
+                             }else{  //si es impar
+                                if self.dia > 0 && self.dia <= 31 {
+                                    valido = true;
                                  }
                              }
                        } else { //si cae de Agosto en adelante
                         if self.mes % 2 == 0{  //si es par
                             if self.dia > 0 && self.dia <= 31{
                                 valido = true;
-                             } else{  //si es impar
-                                if self.dia > 0 && self.dia <= 30 {
-                                    valido = true;
-                                 }
+                             } 
+                         }else{  //si es impar
+                            if self.dia > 0 && self.dia <= 30 {
+                                valido = true;
                              }
                          }
                        }
@@ -127,7 +127,7 @@ impl Fecha{
                      }else{  //si no es bisiesto
                         if self.dia == 0 {
                            self.dia = 28;
-                           self.mes = 1
+                           self.mes = 2;
                         }
                      }
                    }else {  //SI NO ES FEBRERO
@@ -165,24 +165,28 @@ impl Fecha{
                 }
 
 
-          fn es_mayor(&self, otra_fecha:Fecha) ->bool{
+          fn es_mayor(&self, otra_fecha:&Fecha) ->bool{
                 let mut mayor:bool = false;
-                if self.anio < otra_fecha.anio{
+                if self.anio > otra_fecha.anio{
                   mayor = true;
                 }else if self.anio == otra_fecha.anio{
-                  if self.mes < otra_fecha.mes{
+                  if self.mes > otra_fecha.mes{
                     mayor = true;
                   }else if self.mes == otra_fecha.mes{
-                    if self.dia < otra_fecha.dia{
+                    if self.dia > otra_fecha.dia{
                       mayor = true;
                     }
                   }
                 }
                 return mayor
           }
-          
+            fn clonar(&self) ->Fecha{
+                let clon = Fecha::new(self.dia, self.mes, self.anio);
+                return clon
+            }
 
             }
+
 struct Veterinaria{
     nombre:String,
     direccion:String,

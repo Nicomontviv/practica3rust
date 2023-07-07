@@ -17,13 +17,7 @@ struct ConcesionarioAuto{
     capacidad_usada:i32,
     autos:Vec<Auto>,
 }
-struct Auto{
-    marca:String,
-    modelo:String,
-    anio:i32,
-    precio_bruto:f64,
-    color: Color,
-}
+
 impl ConcesionarioAuto{
     fn new(unNombre:String, unaDireccion:String, unaCapacidadMaxima:i32) -> ConcesionarioAuto{
         ConcesionarioAuto{
@@ -65,6 +59,15 @@ impl ConcesionarioAuto{
          } else{ return None}
     }
 
+}
+
+
+struct Auto{
+    marca:String,
+    modelo:String,
+    anio:i32,
+    precio_bruto:f64,
+    color: Color,
 }
 impl Auto{
     fn new(marca:String, modelo:String, anio:i32, precio_bruto:f64, color:Color) ->Auto{
